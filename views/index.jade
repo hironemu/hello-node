@@ -1,2 +1,31 @@
 h1 = title
 p Hello node.
+
+script(src='/socket.io/socket.io.js')
+script(src='http://code.jquery.com/jquery-1.6.1.min.js')
+
+script(type = 'text/javascript')
+  window.onload = function() {
+    var socket = io.connect('http://localhost');
+    socket.on('news', function(data) {
+      console.log(data);
+      socket.emit('my other data', {my: 'data'});
+    });
+    socket.on('broadcastMessage', function(msg) {
+      $('#message_log').append(msg + '<br />');
+    });
+
+    $('#send-message').submit(function() {
+      var msg = $('#message').val();
+      socket.emit('send_message', {message: msg});
+      return false;
+    });
+  };
+
+
+form#send-message
+  input#message
+  button Send
+
+#message_log
+
